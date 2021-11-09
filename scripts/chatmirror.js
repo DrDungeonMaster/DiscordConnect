@@ -47,6 +47,22 @@ Hooks.on("init", function() {
         default: "",
         type: String
     });
+	game.settings.register('DiscordConnect', 'rollLoggingURL', {
+        name: "Roll Logger Lambda URL",
+        hint: "This is the webhook for an AWS Lambda function to store your rolls in a DynamoDB. Advanced feature, requires separate Lambda setup.",
+        scope: "world",
+        config: true,
+        default: "",
+        type: String
+    });
+	game.settings.register('DiscordConnect', 'addPolyglotSpoiler', {
+        name: "Hide Polyglot Text with Spoiler Tags",
+        hint: "Hide messages in languages other than Common with spoiler tags.",
+        scope: "world",
+        config: true,
+        default: true,
+        type: Boolean
+    });
 });
 
 Hooks.on("ready", function() {
@@ -89,7 +105,13 @@ Hooks.on('createChatMessage', (msg, options, userId) => {
 		else {
 			constructedMessage = msg.data.content;
 		}
-	}
+		if(game.settings.get("DiscordConnect", "addPolyglotSpoiler")){
+			var language = msg.data.flags.polyglot.language;
+			if(language.toLowerCase() != "common"){
+				constructedMessage = '|| ' + constructedMessage + " ||\n\tLanguage: || " + language + " ||";
+				}
+			}
+		}
 	else {
 		var ids = msg.data.content.search("midi-qol-target-name");
 		if(ids != -1){

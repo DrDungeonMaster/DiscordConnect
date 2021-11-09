@@ -1,3 +1,6 @@
+# 1.1.0 -- Forked by DrDungeonMaster
+Added support for Polyglot module. Optionally hides text in languages other than Common with spoiler-text.
+
 # 1.0.5
 Fixed messages from tokens with images from an external URL not properly being sent to discord.
 Added option for whether it should put quotes around chat messages!
