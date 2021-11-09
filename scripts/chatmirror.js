@@ -119,7 +119,7 @@ Hooks.on('createChatMessage', (msg, options, userId) => {
 			}
 		if(game.settings.get("DiscordConnect", "addPolyglotSpoiler")){
 			if(language.toLowerCase() != polyglot.polyglot.defaultLanguage){
-					constructedMessage = constructedMessage + "\n ["+ titleCase(language) + ']';
+					constructedMessage = "\n [In "+ titleCase(language) + ']: ' + constructedMessage;
 					}
 				}
 		}
@@ -160,7 +160,7 @@ function appendUserName(message) {
 	var alias = message.alias;
 	var username = getUserName(message.data.user);
 	if (alias != username){alias = alias + " (" + username + ")";}
-	else if (game.settings.get("DiscordConnect", "mainUserId") === message.user){alias = "Dungeon Master (" + username + ")";}
+	else if (game.settings.get("DiscordConnect", "mainUserId") === message.data.user){alias = "Dungeon Master (" + username + ")";}
 	return alias;
 }
 
@@ -230,14 +230,14 @@ function sendToWebhook(message, msgText, hookEmbed, hook, img){
 	else {
 		alias = message.alias;
 	}
-	console.log(img);
 	var params = {
 		username: alias,
 		content: msgText,
 		embeds: hookEmbed
 	}
-	if (img){params.avatar_url = encodeURI(img);}
-	console.log(params);
+	if (img){
+		if (!img.endsWith('mystery-man.svg')){params.avatar_url = encodeURI(img);}
+			}
 	request.send(JSON.stringify(params));
 }
 

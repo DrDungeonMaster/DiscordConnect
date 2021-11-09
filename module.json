@@ -3,7 +3,7 @@
   "title": "DiscordConnect",
   "description": "Send Foundry chat to Discord!",
   "author": "DrDungeonMaster",
-  "version": "v1.1.0f",
+  "version": "v1.1.0g",
   "minimumCoreVersion": "0.7.9",
   "compatibleCoreVersion": "0.8.9",
   "scripts": [
@@ -11,5 +11,5 @@
   ],
 "url": "https://github.com/DrDungeonMaster/DiscordConnect/",
 "manifest": "https://raw.githubusercontent.com/DrDungeonMaster/DiscordConnect/main/module.json",
-"download": "https://github.com/DrDungeonMaster/DiscordConnect/raw/v1.1.0f/DiscordConnect.zip"
+"download": "https://github.com/DrDungeonMaster/DiscordConnect/raw/v1.1.0g/DiscordConnect.zip"
 }
