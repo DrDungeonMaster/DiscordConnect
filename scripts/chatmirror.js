@@ -63,6 +63,14 @@ Hooks.on("init", function() {
         default: true,
         type: Boolean
     });
+	game.settings.register('DiscordConnect', 'addUserName', {
+        name: "Show User ID in Token Chat Messages",
+        hint: "Append the name of the actual user who has written a message or made a roll to the name of the token speaking.",
+        scope: "world",
+        config: true,
+        default: false,
+        type: Boolean
+    });
 });
 
 Hooks.on("ready", function() {
@@ -99,18 +107,21 @@ Hooks.on('createChatMessage', (msg, options, userId) => {
 		hookEmbed = [{title: title, description: desc}];
 	}
 	else if(!msg.data.content.includes("</div>")){
-		if(game.settings.get("DiscordConnect", "addChatQuotes")){
-			constructedMessage = '\"' + msg.data.content + '\"';
-		}
-		else {
-			constructedMessage = msg.data.content;
-		}
+		constructedMessage = msg.data.content;
 		if(game.settings.get("DiscordConnect", "addPolyglotSpoiler")){
 			var language = msg.data.flags.polyglot.language;
-			if(language.toLowerCase() != "common"){
-				constructedMessage = '|| ' + constructedMessage + " ||\n\tLanguage: || " + language + " ||";
+			if(language.toLowerCase() != polyglot.polyglot.defaultLanguage || language.toLowerCase() != polyglot.polyglot._truespeech){
+				constructedMessage = '|| ' + constructedMessage + " ||";
 				}
 			}
+		if(game.settings.get("DiscordConnect", "addChatQuotes")){
+			constructedMessage = '\"' + msg.data.content + '\"';
+			}
+		if(game.settings.get("DiscordConnect", "addPolyglotSpoiler")){
+			if(language.toLowerCase() != polyglot.polyglot.defaultLanguage){
+					constructedMessage = constructedMessage + "\n\tLanguage:" + titleCase(language);
+					}
+				}
 		}
 	else {
 		var ids = msg.data.content.search("midi-qol-target-name");
@@ -129,6 +140,28 @@ Hooks.on('createChatMessage', (msg, options, userId) => {
 	}
 	sendMessage(msg, constructedMessage, hookEmbed);
 });
+
+function titleCase(sentenceText){
+	var finalSentence = sentenceText.replace(/(^\w{1})|(\s+\w{1})/g, letter => letter.toUpperCase());
+	return finalSentence
+}
+
+function getUserName(user_id) {
+	var username;
+	game.users.forEach((user) => {
+		if (user.data._id === user_id) {
+			username = user.data.name;
+		}
+		});
+	return username;
+}
+
+function appendUsername(message) {
+	var alias = message.alias;
+	var username = getUserName(message.user);
+	if (alias != username){alias = alias + "(" + username + ")";}
+	return alias;
+}
 
 function parseHitMessage(msg){
 	var parser = new DOMParser();
@@ -186,8 +219,15 @@ function sendToWebhook(message, msgText, hookEmbed, hook, img){
 	var request = new XMLHttpRequest();
     request.open("POST", hook);
 	request.setRequestHeader('Content-type', 'application/json');
+	var alias;
+	if (game.settings.get("DiscordConnect", "addUserName")) {
+		alias = appendUserName(message);
+	}
+	else {
+		alias = message.alias;
+	}
 	var params = {
-		username: message.alias,
+		username: alias,
 		avatar_url: encodeURI(img),
 		content: msgText,
 		embeds: hookEmbed
