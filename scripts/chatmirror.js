@@ -198,12 +198,14 @@ function sendMessage(message, msgText, hookEmbed) {
         img = message.user.avatar;
     }
 	
-	var imgurl = "";
-	if(img.includes("http")){
-		imgurl = img;
-	}
-	else{
-		imgurl = game.settings.get("DiscordConnect", "inviteURL") + img;
+	var imgurl;
+	if (img){
+		if(img.includes("http")){
+			imgurl = img;
+		}
+		else{
+			imgurl = game.settings.get("DiscordConnect", "inviteURL") + img;
+		}
 	}
 	
 	var hook = "";
@@ -221,7 +223,7 @@ function sendToWebhook(message, msgText, hookEmbed, hook, img){
     request.open("POST", hook);
 	request.setRequestHeader('Content-type', 'application/json');
 	var alias;
-	if (game.settings.get("DiscordConnect", "addUserName")) {
+	if (game.settings.get("DiscordConnect", "addUsernameText")) {
 		alias = appendUserName(message);
 	}
 	else {
@@ -229,10 +231,10 @@ function sendToWebhook(message, msgText, hookEmbed, hook, img){
 	}
 	var params = {
 		username: alias,
-		avatar_url: encodeURI(img),
 		content: msgText,
 		embeds: hookEmbed
 	}
+	if (img){params.avatar_url = encodeURI(img);}
 	request.send(JSON.stringify(params));
 }
 
