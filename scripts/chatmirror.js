@@ -156,7 +156,7 @@ function getUserName(user_id) {
 	return username;
 }
 
-function appendUsername(message) {
+function appendUserName(message) {
 	var alias = message.alias;
 	var username = getUserName(message.user);
 	if (alias != username){alias = alias + " (" + username + ")";}
