@@ -115,11 +115,11 @@ Hooks.on('createChatMessage', (msg, options, userId) => {
 				}
 			}
 		if(game.settings.get("DiscordConnect", "addChatQuotes")){
-			constructedMessage = '\"' + msg.data.content + '\"';
+			constructedMessage = '\"' + constructedMessage + '\"';
 			}
 		if(game.settings.get("DiscordConnect", "addPolyglotSpoiler")){
 			if(language.toLowerCase() != polyglot.polyglot.defaultLanguage){
-					constructedMessage = constructedMessage + "\n\tLanguage:" + titleCase(language);
+					constructedMessage = constructedMessage + "\n\tLanguage: " + titleCase(language);
 					}
 				}
 		}
@@ -159,8 +159,8 @@ function getUserName(user_id) {
 function appendUsername(message) {
 	var alias = message.alias;
 	var username = getUserName(message.user);
-	if (alias != username){alias = "${alias} (${username})";}
-	else if (game.user.isGM){alias = "Dungeon Master (${username})";}
+	if (alias != username){alias = alias + " (" + username + ")";}
+	else if (game.settings.get("DiscordConnect", "mainUserId") === message.user){alias = "Dungeon Master (" + username + ")";}
 	return alias;
 }
 
