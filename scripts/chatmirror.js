@@ -119,7 +119,7 @@ Hooks.on('createChatMessage', (msg, options, userId) => {
 			}
 		if(game.settings.get("DiscordConnect", "addPolyglotSpoiler")){
 			if(language.toLowerCase() != polyglot.polyglot.defaultLanguage){
-					constructedMessage = constructedMessage + "\n\tLanguage: " + titleCase(language);
+					constructedMessage = constructedMessage + "\n ["+ titleCase(language) + ']';
 					}
 				}
 		}
@@ -158,7 +158,7 @@ function getUserName(user_id) {
 
 function appendUserName(message) {
 	var alias = message.alias;
-	var username = getUserName(message.user);
+	var username = getUserName(message.data.user);
 	if (alias != username){alias = alias + " (" + username + ")";}
 	else if (game.settings.get("DiscordConnect", "mainUserId") === message.user){alias = "Dungeon Master (" + username + ")";}
 	return alias;
@@ -215,6 +215,7 @@ function sendMessage(message, msgText, hookEmbed) {
     else{
 		hook = game.settings.get("DiscordConnect", "webHookURL");
 	}
+	console.log(imgurl);
 	sendToWebhook(message, msgText, hookEmbed, hook, imgurl);
 }
 
@@ -229,12 +230,14 @@ function sendToWebhook(message, msgText, hookEmbed, hook, img){
 	else {
 		alias = message.alias;
 	}
+	console.log(img);
 	var params = {
 		username: alias,
 		content: msgText,
 		embeds: hookEmbed
 	}
 	if (img){params.avatar_url = encodeURI(img);}
+	console.log(params);
 	request.send(JSON.stringify(params));
 }
 
