@@ -63,12 +63,12 @@ Hooks.on("init", function() {
         default: true,
         type: Boolean
     });
-	game.settings.register('DiscordConnect', 'addUserName', {
-        name: "Show User ID in Token Chat Messages",
-        hint: "Append the name of the actual user who has written a message or made a roll to the name of the token speaking.",
+	game.settings.register('DiscordConnect', 'addUsernameText', {
+        name: "Append Username to Token Speech",
+        hint: "Show what user was speaking as a given token.",
         scope: "world",
         config: true,
-        default: false,
+        default: true,
         type: Boolean
     });
 });
@@ -110,7 +110,7 @@ Hooks.on('createChatMessage', (msg, options, userId) => {
 		constructedMessage = msg.data.content;
 		if(game.settings.get("DiscordConnect", "addPolyglotSpoiler")){
 			var language = msg.data.flags.polyglot.language;
-			if(language.toLowerCase() != polyglot.polyglot.defaultLanguage || language.toLowerCase() != polyglot.polyglot._truespeech){
+			if(language.toLowerCase() != polyglot.polyglot.defaultLanguage && language.toLowerCase() != polyglot.polyglot._truespeech){
 				constructedMessage = '|| ' + constructedMessage + " ||";
 				}
 			}
