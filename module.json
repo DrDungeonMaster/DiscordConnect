@@ -3,7 +3,7 @@
   "title": "DiscordConnect",
   "description": "Send Foundry chat to Discord!",
   "author": "DrDungeonMaster",
-  "version": "1.1.0",
+  "version": "v1.1.0a",
   "minimumCoreVersion": "0.7.9",
   "compatibleCoreVersion": "0.8.9",
   "scripts": [

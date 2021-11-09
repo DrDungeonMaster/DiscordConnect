@@ -159,7 +159,8 @@ function getUserName(user_id) {
 function appendUsername(message) {
 	var alias = message.alias;
 	var username = getUserName(message.user);
-	if (alias != username){alias = alias + "(" + username + ")";}
+	if (alias != username){alias = "${alias} (${username})";}
+	else if (game.user.isGM){alias = "Dungeon Master (${username})";}
 	return alias;
 }
 
