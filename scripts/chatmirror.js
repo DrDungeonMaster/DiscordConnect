@@ -107,7 +107,7 @@ Hooks.on('createChatMessage', (msg, options, userId) => {
 			desc = desc + 'Rolled ' + msg.roll.formula + ', and got a ' + msg.roll.result + ' = ' + msg.roll.total;
 			hookEmbed = [{title: title, description: desc}];
 			}
-		if (game.settings.get("DiscordConnect", "rollLoggingURL" != "")){
+		if (game.settings.get("DiscordConnect", "rollLoggingURL") != ""){
 			logRolls(userID, msg.data.flavor, msg.roll.formula, msg.roll.results, hook);
 		}
 	}
