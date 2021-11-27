@@ -108,7 +108,7 @@ Hooks.on('createChatMessage', (msg, options, userId) => {
 			hookEmbed = [{title: title, description: desc}];
 			}
 		if (game.settings.get("DiscordConnect", "rollLoggingURL") != ""){
-			logRolls(game.userId, msg.data.flavor, msg.roll, game.settings.get("DiscordConnect", "rollLoggingURL"));
+			logRolls(game.userId, getUserName(game.userID), msg.speaker.alias, msg.roll, game.settings.get("DiscordConnect", "rollLoggingURL"));
 		}
 	}
 	else if(!msg.data.content.includes("</div>")){
@@ -224,11 +224,12 @@ function sendMessage(message, msgText, hookEmbed) {
 	sendToWebhook(message, msgText, hookEmbed, hook, imgurl);
 }
 
-function logRolls(userID, flavor, roll, hook) {
+function logRolls(userID, user_name, character, roll, hook) {
 	json = {
 		"userID":userID,
-		"flavor":flavor,
-		"rollFormula":roll,
+		"user_name": user_name,
+		"character": character,
+		"roll":roll,
 		"timestamp":Date.now(),
 		"command":"logFoundryRolls"
 	};
