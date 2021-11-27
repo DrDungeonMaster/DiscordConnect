@@ -108,7 +108,7 @@ Hooks.on('createChatMessage', (msg, options, userId) => {
 			hookEmbed = [{title: title, description: desc}];
 			}
 		if (game.settings.get("DiscordConnect", "rollLoggingURL") != ""){
-			logRolls(game.userId, msg.data.flavor, msg.roll.formula, msg.roll.results, hook);
+			logRolls(game.userId, msg.data.flavor, msg.roll.formula, msg.roll.results, game.settings.get("DiscordConnect", "rollLoggingURL"));
 		}
 	}
 	else if(!msg.data.content.includes("</div>")){
