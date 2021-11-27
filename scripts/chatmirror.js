@@ -83,7 +83,7 @@ Hooks.on('createChatMessage', (msg, options, userId) => {
 	if(game.userId != game.settings.get("DiscordConnect", "mainUserId") && game.settings.get("DiscordConnect", "mainUserId") != ""){
 		return;
 	}
-	if(msg.isRoll && game.settings.get("DiscordConnect", "rollWebHookURL") == ""){
+	if(msg.isRoll && game.settings.get("DiscordConnect", "rollWebHookURL") == "" && game.settings.get("DiscordConnect", "rollLoggingURL") == ""){
 		return;
 	}
 	if(!msg.isRoll && game.settings.get("DiscordConnect", "webHookURL") == ""){
@@ -98,13 +98,18 @@ Hooks.on('createChatMessage', (msg, options, userId) => {
 	}
 	
 	if(msg.isRoll){
-		var title = '';
-		var desc = '';
-		if(msg.data.flavor != null && msg.data.flavor.length > 0){
-			title = msg.data.flavor + '\n';
+		if(game.settings.get("DiscordConnect", "rollWebHookURL") != ""){
+			var title = '';
+			var desc = '';
+			if(msg.data.flavor != null && msg.data.flavor.length > 0){
+				title = msg.data.flavor + '\n';
+			}
+			desc = desc + 'Rolled ' + msg.roll.formula + ', and got a ' + msg.roll.result + ' = ' + msg.roll.total;
+			hookEmbed = [{title: title, description: desc}];
+			}
+		if (game.settings.get("DiscordConnect", rollLoggingURL != "")){
+			logRolls(userID, msg.data.flavor, msg.roll.formula, msg.roll.results, hook);
 		}
-		desc = desc + 'Rolled ' + msg.roll.formula + ', and got a ' + msg.roll.result + ' = ' + msg.roll.total;
-		hookEmbed = [{title: title, description: desc}];
 	}
 	else if(!msg.data.content.includes("</div>")){
 		constructedMessage = msg.data.content;
@@ -217,6 +222,21 @@ function sendMessage(message, msgText, hookEmbed) {
 	}
 	console.log(imgurl);
 	sendToWebhook(message, msgText, hookEmbed, hook, imgurl);
+}
+
+function logRolls(userID, flavor, rollFormula, rollResults, hook) {
+	json = {
+		"userID":userID,
+		"flavor":flavor,
+		"rollFormula":rollFormula,
+		"rollResults":rollResults,
+		"timestamp":Date.now(),
+		"command":"logFoundryRolls"
+	};
+	var request = new XMLHttpRequest();
+    request.open("POST", hook);
+	request.setRequestHeader('Content-type', 'application/json');
+	request.send(JSON.stringify(json));
 }
 
 function sendToWebhook(message, msgText, hookEmbed, hook, img){
