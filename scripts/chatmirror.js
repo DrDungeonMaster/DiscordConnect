@@ -235,7 +235,7 @@ function logRolls(userID, flavor, rollFormula, rollResults, hook) {
 	};
 	var request = new XMLHttpRequest();
     request.open("POST", hook);
-	request.setRequestHeader('Content-type', 'application/json');
+	request.setRequestHeader('Content-type', 'text/plain');
 	request.send(JSON.stringify(json));
 }
 
