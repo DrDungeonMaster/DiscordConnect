@@ -109,7 +109,7 @@ Hooks.on('createChatMessage', (msg, options, userId) => {
 			}
 		if (game.settings.get("DiscordConnect", "rollLoggingURL") != ""){
 			console.log(msg);
-			logRolls(game.userId, getUserName(game.userId), msg.speaker.alias, msg.roll, game.settings.get("DiscordConnect", "rollLoggingURL"));
+			logRolls(game.userId, getUserName(game.userId), msg.data.speaker.alias, msg.roll, game.settings.get("DiscordConnect", "rollLoggingURL"));
 		}
 	}
 	else if(!msg.data.content.includes("</div>")){
